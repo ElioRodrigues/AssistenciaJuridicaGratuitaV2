@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<!-- Navbar Inclusa -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Assistência Jurídica</a>
@@ -20,7 +19,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
-                <!-- Links específicos por role (ex: Dashboard) podem ser adicionados aqui se o usuário estiver logado -->
+                <!-- Ver se precisa por uma Dashboard-->
                 <li class="nav-item" sec:authorize="hasRole(\'CLIENTE\')">
                     <a class="nav-link" th:href="@{/cliente/dashboard}">Meu Painel</a>
                 </li>
@@ -54,8 +53,8 @@
 
 <div class="container mt-4">
 
-    <!-- Conteúdo Público da Home -->
     <h1>Bem-vindo ao Sistema de Assistência Jurídica Gratuita</h1>
+    <!-- Trocar esse texto podre de introdução ao sistema.-->
     <p class="lead">Conectamos cidadãos que precisam de auxílio legal com advogados voluntários dispostos a ajudar.</p>
     <hr>
     <p>Se você precisa de assistência jurídica, cadastre-se como cliente para descrever seu caso.</p>
@@ -80,7 +79,6 @@
             </div>
         </div>
     </div>
-    <!-- Fim do Conteúdo Público -->
 
 </div>
 

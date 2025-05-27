@@ -104,7 +104,6 @@ public class Advogado implements UserDetails {
         return email;
     }
 
-    // Métodos padrão UserDetails
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -125,7 +124,7 @@ public class Advogado implements UserDetails {
         return true;
     }
 
-    // Getters e Setters existentes
+    // Getters/setters
     public Long getId() {
         return id;
     }
