@@ -42,15 +42,15 @@ public class Advogado implements UserDetails {
     private String genero;
 
     @Column(nullable = false)
-    private String role = "ROLE_ADVOGADO"; // padrão
+    private String role = "ROLE_ADVOGADO";
 
-    @ManyToMany(fetch = FetchType.LAZY) // LAZY é geralmente melhor para performance
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "advogado_area_atuacao", // Nome da tabela de ligação
-            joinColumns = @JoinColumn(name = "advogado_id"), // Coluna que referencia Advogado
-            inverseJoinColumns = @JoinColumn(name = "area_id") // Coluna que referencia AreaAtuacao
+            name = "advogado_area_atuacao",
+            joinColumns = @JoinColumn(name = "advogado_id"),
+            inverseJoinColumns = @JoinColumn(name = "area_id")
     )
-    private Set<AreaAtuacao> areasAtuacao = new HashSet<>(); // Inicializa a coleção
+    private Set<AreaAtuacao> areasAtuacao = new HashSet<>();
 
 
     @Override

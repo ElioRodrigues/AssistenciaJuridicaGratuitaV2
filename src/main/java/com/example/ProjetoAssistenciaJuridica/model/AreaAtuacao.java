@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "area_atuacao") // Define o nome da tabela no banco
+@Table(name = "area_atuacao")
 public class AreaAtuacao {
 
     @Id
@@ -12,13 +12,13 @@ public class AreaAtuacao {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String nome; // Ex: "Direito de Família", "Direito do Trabalho"
+    private String nome;
 
-    // Relacionamento inverso (opcional, mas útil se precisar listar advogados por área)
+
     @ManyToMany(mappedBy = "areasAtuacao")
     private Set<Advogado> advogados;
 
-    // Construtores (padrão e com nome)
+
     public AreaAtuacao() {
     }
 
@@ -51,7 +51,7 @@ public class AreaAtuacao {
         this.advogados = advogados;
     }
 
-    // hashCode e equals (importante para coleções como Set)
+
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;

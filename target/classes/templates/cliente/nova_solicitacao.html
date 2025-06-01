@@ -18,7 +18,6 @@
             <label for="area" class="form-label">Área de Atuação</label>
             <select class="form-select" id="area" th:field="*{area}" required>
                 <option value="" selected disabled>Selecione a área...</option>
-                <!-- Assumindo que você vai passar a lista de áreas no model com o nome "areas" -->
                 <option th:each="areaOpt : ${areas}" th:value="${areaOpt.id}" th:text="${areaOpt.nome}"></option>
             </select>
             <div class="invalid-feedback">Por favor, selecione a área de atuação.</div>

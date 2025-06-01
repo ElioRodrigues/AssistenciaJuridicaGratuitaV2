@@ -36,20 +36,8 @@ public class SolicitacaoService {
         }
         solicitacao.setCliente(cliente);
         solicitacao.setStatus(StatusSolicitacao.ABERTA);
-        // A linha solicitacao.setDataCriacao(...) foi removida pois dataCriacao é definida na entidade
 
-        // IMPORTANTE: Você precisa definir a Área de Atuação aqui também!
-        // Exemplo: Supondo que a área venha no objeto 'solicitacao' do formulário:
-        // AreaAtuacao area = areaRepository.findById(solicitacao.getArea().getId()).orElseThrow(() -> new RuntimeException("Área não encontrada"));
-        // solicitacao.setArea(area);
-        // Ou se o ID da área vier separadamente:
-        // Long areaId = ... // Obter o ID da área selecionada no formulário
-        // AreaAtuacao area = areaRepository.findById(areaId).orElseThrow(() -> new RuntimeException("Área não encontrada"));
-        // solicitacao.setArea(area);
-
-        // *** Certifique-se de que o objeto 'solicitacao' que chega aqui já tenha a 'AreaAtuacao' definida ***
-        // *** ou busque e defina a 'AreaAtuacao' antes de salvar ***
-        if (solicitacao.getArea() == null /* ou verificar se o ID da área é nulo */) {
+        if (solicitacao.getArea() == null ) {
             throw new RuntimeException("A área de atuação da solicitação não foi definida.");
         }
 
@@ -92,7 +80,6 @@ public class SolicitacaoService {
         if (advogado == null) {
             throw new RuntimeException("Advogado não encontrado.");
         }
-        // histórico de todas as solicitações relacionadas
         return solicitacaoRepository.findByAdvogadoOrderByDataAceiteDesc(advogado);
     }
 
@@ -100,7 +87,6 @@ public class SolicitacaoService {
     public List<Solicitacao> buscarSolicitacoesPorCliente(String clienteEmail) {
         Cliente cliente = clientRepository.findByEmail(clienteEmail);
         if (cliente == null) {
-            // Você pode querer lançar uma exceção mais específica ou retornar lista vazia
             throw new RuntimeException("Cliente com email " + clienteEmail + " não encontrado.");
         }
         // Assumindo que você tem um método findByClienteOrderByDataCriacaoDesc no seu SolicitacaoRepository

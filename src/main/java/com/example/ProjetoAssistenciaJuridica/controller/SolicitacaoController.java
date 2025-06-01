@@ -27,16 +27,9 @@ public class SolicitacaoController {
     @Autowired
     private UserService userService;
 
-    @Autowired // Injetar o novo repositório
+    @Autowired
     private AreaAtuacaoRepository areaAtuacaoRepository;
 
-    // Removida a lista estática de categorias
-    /*
-    private final List<String> categoriasJuridicas = Arrays.asList(
-        "Direito Civil", "Direito Penal", "Direito Trabalhista", "Direito do Consumidor",
-        "Direito de Família", "Direito Empresarial", "Direito Tributário", "Outros"
-    );
-    */
 
     @GetMapping("/cliente/solicitacao/nova")
     @PreAuthorize("hasRole(\'CLIENTE\')")
@@ -46,7 +39,6 @@ public class SolicitacaoController {
         List<AreaAtuacao> areas = areaAtuacaoRepository.findAll();
         // Adicionar a lista de áreas ao modelo com o nome "areas"
         model.addAttribute("areas", areas);
-        // Removida a linha que adicionava categorias estáticas
         return "cliente/nova_solicitacao";
     }
 
