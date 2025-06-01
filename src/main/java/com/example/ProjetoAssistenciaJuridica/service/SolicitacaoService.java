@@ -36,18 +36,26 @@ public class SolicitacaoService {
         }
         solicitacao.setCliente(cliente);
         solicitacao.setStatus(StatusSolicitacao.ABERTA);
-        solicitacao.setDataCriacao(LocalDateTime.now());
+        // A linha solicitacao.setDataCriacao(...) foi removida pois dataCriacao é definida na entidade
+
+        // IMPORTANTE: Você precisa definir a Área de Atuação aqui também!
+        // Exemplo: Supondo que a área venha no objeto 'solicitacao' do formulário:
+        // AreaAtuacao area = areaRepository.findById(solicitacao.getArea().getId()).orElseThrow(() -> new RuntimeException("Área não encontrada"));
+        // solicitacao.setArea(area);
+        // Ou se o ID da área vier separadamente:
+        // Long areaId = ... // Obter o ID da área selecionada no formulário
+        // AreaAtuacao area = areaRepository.findById(areaId).orElseThrow(() -> new RuntimeException("Área não encontrada"));
+        // solicitacao.setArea(area);
+
+        // *** Certifique-se de que o objeto 'solicitacao' que chega aqui já tenha a 'AreaAtuacao' definida ***
+        // *** ou busque e defina a 'AreaAtuacao' antes de salvar ***
+        if (solicitacao.getArea() == null /* ou verificar se o ID da área é nulo */) {
+            throw new RuntimeException("A área de atuação da solicitação não foi definida.");
+        }
+
         return solicitacaoRepository.save(solicitacao);
     }
 
-    // Método para histórico do cliente
-    public List<Solicitacao> buscarSolicitacoesPorCliente(String clienteEmail) {
-        Cliente cliente = clientRepository.findByEmail(clienteEmail);
-        if (cliente == null) {
-            throw new RuntimeException("Cliente não encontrado.");
-        }
-        return solicitacaoRepository.findByClienteOrderByDataCriacaoDesc(cliente);
-    }
 
     // Método para buscar todas as solicitações abertas (para advogados)
     public List<Solicitacao> buscarSolicitacoesAbertas() {
@@ -88,6 +96,18 @@ public class SolicitacaoService {
         return solicitacaoRepository.findByAdvogadoOrderByDataAceiteDesc(advogado);
     }
 
+    // Método para histórico do cliente
+    public List<Solicitacao> buscarSolicitacoesPorCliente(String clienteEmail) {
+        Cliente cliente = clientRepository.findByEmail(clienteEmail);
+        if (cliente == null) {
+            // Você pode querer lançar uma exceção mais específica ou retornar lista vazia
+            throw new RuntimeException("Cliente com email " + clienteEmail + " não encontrado.");
+        }
+        // Assumindo que você tem um método findByClienteOrderByDataCriacaoDesc no seu SolicitacaoRepository
+        return solicitacaoRepository.findByClienteOrderByDataCriacaoDesc(cliente);
+    }
+
+
     // Método auxiliar para obter o email do usuário logado (???)
     public String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -101,5 +121,7 @@ public class SolicitacaoService {
             return principal.toString(); // ??
         }
     }
+
+
 }
 

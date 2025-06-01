@@ -10,11 +10,8 @@ public class Solicitacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String tema;
-
-    @Column(nullable = false)
-    private String categoria; // Ex: Criminal, Trabalhista, Cívil, etc.
+    // Removido: private String tema;
+    // Removido: private String categoria;
 
     @Lob // Para textos mais longos
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -32,12 +29,18 @@ public class Solicitacao {
     @JoinColumn(name = "advogado_id", nullable = true) // Advogado pode ser nulo inicialmente
     private Advogado advogado;
 
+    // *** NOVO RELACIONAMENTO MANY-TO-ONE COM AreaAtuacao ***
+    @ManyToOne(fetch = FetchType.LAZY) // FetchType.LAZY é geralmente recomendado
+    @JoinColumn(name = "area_id", nullable = false) // Assumindo que toda solicitação DEVE ter uma área
+    private AreaAtuacao area; // Referência à área de atuação
+    // *** FIM DO NOVO RELACIONAMENTO ***
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     private LocalDateTime dataAceite;
 
-    // G&S
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -47,21 +50,8 @@ public class Solicitacao {
         this.id = id;
     }
 
-    public String getTema() {
-        return tema;
-    }
-
-    public void setTema(String tema) {
-        this.tema = tema;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
+    // Removido: getTema() e setTema()
+    // Removido: getCategoria() e setCategoria()
 
     public String getDescricao() {
         return descricao;
@@ -95,13 +85,24 @@ public class Solicitacao {
         this.advogado = advogado;
     }
 
+    // *** GETTER E SETTER PARA area ***
+    public AreaAtuacao getArea() {
+        return area;
+    }
+
+    public void setArea(AreaAtuacao area) {
+        this.area = area;
+    }
+    // *** FIM GETTER/SETTER ***
+
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
+    // Removido set para dataCriacao pois é inicializada e não deve ser atualizada (updatable=false)
+    // public void setDataCriacao(LocalDateTime dataCriacao) {
+    //     this.dataCriacao = dataCriacao;
+    // }
 
     public LocalDateTime getDataAceite() {
         return dataAceite;
@@ -111,4 +112,3 @@ public class Solicitacao {
         this.dataAceite = dataAceite;
     }
 }
-

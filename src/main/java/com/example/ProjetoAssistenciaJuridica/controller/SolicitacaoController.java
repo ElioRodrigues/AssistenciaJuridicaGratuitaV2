@@ -1,5 +1,8 @@
 package com.example.ProjetoAssistenciaJuridica.controller;
+
+import com.example.ProjetoAssistenciaJuridica.model.AreaAtuacao; // Importar AreaAtuacao
 import com.example.ProjetoAssistenciaJuridica.model.Solicitacao;
+import com.example.ProjetoAssistenciaJuridica.repository.AreaAtuacaoRepository; // Importar AreaAtuacaoRepository
 import com.example.ProjetoAssistenciaJuridica.service.SolicitacaoService;
 import com.example.ProjetoAssistenciaJuridica.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
+//import java.util.Arrays; acho que não ta precisando mais
 import java.util.List;
 
 @Controller
@@ -24,17 +27,26 @@ public class SolicitacaoController {
     @Autowired
     private UserService userService;
 
+    @Autowired // Injetar o novo repositório
+    private AreaAtuacaoRepository areaAtuacaoRepository;
+
+    // Removida a lista estática de categorias
+    /*
     private final List<String> categoriasJuridicas = Arrays.asList(
         "Direito Civil", "Direito Penal", "Direito Trabalhista", "Direito do Consumidor",
         "Direito de Família", "Direito Empresarial", "Direito Tributário", "Outros"
     );
-
+    */
 
     @GetMapping("/cliente/solicitacao/nova")
     @PreAuthorize("hasRole(\'CLIENTE\')")
     public String showNovaSolicitacaoForm(Model model) {
         model.addAttribute("solicitacao", new Solicitacao());
-        model.addAttribute("categorias", categoriasJuridicas);
+        // Buscar todas as áreas de atuação do banco
+        List<AreaAtuacao> areas = areaAtuacaoRepository.findAll();
+        // Adicionar a lista de áreas ao modelo com o nome "areas"
+        model.addAttribute("areas", areas);
+        // Removida a linha que adicionava categorias estáticas
         return "cliente/nova_solicitacao";
     }
 
@@ -45,18 +57,26 @@ public class SolicitacaoController {
                                          Authentication authentication,
                                          RedirectAttributes redirectAttributes,
                                          Model model) {
+        // Se houver erro de validação, precisa adicionar as áreas novamente ao model
+        // para que o select no formulário seja populado novamente.
         if (result.hasErrors()) {
-            model.addAttribute("categorias", categoriasJuridicas);
+            List<AreaAtuacao> areas = areaAtuacaoRepository.findAll();
+            model.addAttribute("areas", areas);
             return "cliente/nova_solicitacao";
         }
 
         try {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            // O service agora precisa garantir que a 'area' (que vem associada pelo th:field)
+            // seja persistida corretamente. A validação de área não nula deve ocorrer
+            // antes ou durante a chamada do service.
             solicitacaoService.criarNovaSolicitacao(solicitacao, userDetails.getUsername());
             redirectAttributes.addFlashAttribute("sucesso", "Solicitação criada com sucesso!");
             return "redirect:/cliente/solicitacoes/historico";
         } catch (Exception e) {
-            model.addAttribute("categorias", categoriasJuridicas);
+            // Adicionar áreas ao modelo em caso de erro também
+            List<AreaAtuacao> areas = areaAtuacaoRepository.findAll();
+            model.addAttribute("areas", areas);
             model.addAttribute("erro", "Erro ao criar solicitação: " + e.getMessage());
             return "cliente/nova_solicitacao";
         }
@@ -71,12 +91,13 @@ public class SolicitacaoController {
         return "cliente/historico_solicitacoes";
     }
 
-
     @GetMapping("/advogado/solicitacoes/listar")
     @PreAuthorize("hasRole(\'ADVOGADO\')")
     public String showListarSolicitacoesAbertas(Model model) {
         List<Solicitacao> solicitacoes = solicitacaoService.buscarSolicitacoesAbertas();
         model.addAttribute("solicitacoes", solicitacoes);
+        // ATENÇÃO: O template advogado/listar_solicitacoes.html também pode precisar
+        // de ajustes se ele exibia 'categoria' ou 'tema'. Agora deve exibir 'solicitacao.area.nome'.
         return "advogado/listar_solicitacoes";
     }
 
@@ -102,6 +123,8 @@ public class SolicitacaoController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<Solicitacao> solicitacoes = solicitacaoService.buscarSolicitacoesPorAdvogado(userDetails.getUsername());
         model.addAttribute("solicitacoes", solicitacoes);
+        // ATENÇÃO: O template advogado/historico_aceitas.html também pode precisar
+        // de ajustes se ele exibia 'categoria' ou 'tema'. Agora deve exibir 'solicitacao.area.nome'.
         return "advogado/historico_aceitas";
     }
 }

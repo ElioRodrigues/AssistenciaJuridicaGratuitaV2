@@ -6,6 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Advogado implements UserDetails {
@@ -42,6 +44,13 @@ public class Advogado implements UserDetails {
     @Column(nullable = false)
     private String role = "ROLE_ADVOGADO"; // padrão
 
+    @ManyToMany(fetch = FetchType.LAZY) // LAZY é geralmente melhor para performance
+    @JoinTable(
+            name = "advogado_area_atuacao", // Nome da tabela de ligação
+            joinColumns = @JoinColumn(name = "advogado_id"), // Coluna que referencia Advogado
+            inverseJoinColumns = @JoinColumn(name = "area_id") // Coluna que referencia AreaAtuacao
+    )
+    private Set<AreaAtuacao> areasAtuacao = new HashSet<>(); // Inicializa a coleção
 
 
     @Override
