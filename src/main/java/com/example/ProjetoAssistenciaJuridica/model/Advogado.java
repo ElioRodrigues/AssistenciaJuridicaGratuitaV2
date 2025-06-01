@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
 
@@ -26,68 +25,25 @@ public class Advogado implements UserDetails {
     @Column(nullable = false, unique = true)
     private String oab;
 
-    // Novos campos adicionados
     @Column(nullable = false)
     private String senha;
+
+    @Column(nullable = false)
     private String cep;
+
+    @Column(nullable = false)
     private String endereco;
+
+    @Column(nullable = false)
     private String telefone;
+
     private String genero;
 
     @Column(nullable = false)
-    private String role = "ROLE_ADVOGADO"; // Papel padrão para Advogado
+    private String role = "ROLE_ADVOGADO"; // padrão
 
-    // Getters e Setters para os novos campos
 
-    public String getSenha() {
-        return senha;
-    }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    // Métodos UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role));
@@ -163,6 +119,54 @@ public class Advogado implements UserDetails {
 
     public void setOab(String oab) {
         this.oab = oab;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
 
